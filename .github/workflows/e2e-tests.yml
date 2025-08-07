@@ -31,7 +31,6 @@ jobs:
       - name: Generate matrix.json
         run: node .github/workflows/generate-feature-matrix.js
 
-
       - id: set-matrix
         run: echo "matrix=$(cat matrix.json | jq -c .)" >> $GITHUB_OUTPUT
 
@@ -51,6 +50,16 @@ jobs:
 
       - run: npm ci
 
+      # ✅ Install Java + Allure CLI chính gốc
+      - name: Install Allure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
+          unzip -q allure.zip -d allure-cli
+          sudo mv allure-cli/allure-2.27.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
       - name: Run Cypress
         env:
           CYPRESS_username: ${{ github.event.inputs.username }}
@@ -65,9 +74,10 @@ jobs:
         run: |
           mkdir -p allure-results/history
           cp -r allure-report/history allure-results/ || true
-          npx allure generate allure-results --clean -o allure-report
+          allure generate allure-results --clean -o allure-report
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report-${{ matrix.spec_file }}
           path: allure-report
