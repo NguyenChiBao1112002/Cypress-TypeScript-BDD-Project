@@ -4,7 +4,7 @@ import LoginPage from "../pages/LoginPage";
 Given("I open the PIM page", () => {
   LoginPage.visit();
   LoginPage.login();
-  cy.wait(2000);
+  cy.wait(4000);
 });
 
 When ("I add employee in PIM page", (datatable: DataTable) => {
