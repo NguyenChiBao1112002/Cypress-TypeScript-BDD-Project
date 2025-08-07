@@ -1,3 +1,4 @@
+# Will get many reports (The number of report = The number of Testing Jobs)
 name: Run Cypress E2E Tests
 
 on:
@@ -50,7 +51,6 @@ jobs:
 
       - run: npm ci
 
-      # ✅ Install Java + Allure CLI chính gốc
       - name: Install Allure CLI
         run: |
           sudo apt-get update
@@ -60,6 +60,26 @@ jobs:
           sudo mv allure-cli/allure-2.27.0 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
+      - name: Extract artifact name
+        run: |
+          ARTIFACT_NAME=$(basename "${{ matrix.spec_file }}" .feature)
+          ARTIFACT_NAME_SAFE=$(echo "$ARTIFACT_NAME" | tr '/' '-' | tr ' ' '-')
+          echo "artifact_name=$ARTIFACT_NAME_SAFE" >> $GITHUB_ENV
+
+      # 🔽 Tải lại history từ artifact trước (nếu có)
+      - name: Download previous history (optional)
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-history-${{ env.artifact_name }}
+          path: allure-history
+
+      - name: Copy history into allure-results (if exists)
+        run: |
+          mkdir -p allure-results/history
+          cp -r allure-history/history/* allure-results/history/ || true
+
+      # 🔥 Chạy Cypress
       - name: Run Cypress
         env:
           CYPRESS_username: ${{ github.event.inputs.username }}
@@ -70,21 +90,67 @@ jobs:
             --spec "${{ matrix.spec_file }}" \
             --env username=${{ github.event.inputs.username }},password=${{ github.event.inputs.password }}
 
+      # 🧾 Tạo báo cáo Allure
       - name: Generate Allure Report
         run: |
-          mkdir -p allure-results/history
-          cp -r allure-report/history allure-results/ || true
           allure generate allure-results --clean -o allure-report
 
-      - name: Extract artifact name
-        run: |
-          ARTIFACT_NAME=$(basename "${{ matrix.spec_file }}" .feature)
-          ARTIFACT_NAME_SAFE=$(echo "$ARTIFACT_NAME" | tr '/' '-' | tr ' ' '-')  # phòng trường hợp có /
-          echo "artifact_name=$ARTIFACT_NAME_SAFE" >> $GITHUB_ENV
-
+      # 📤 Upload Allure Report
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-${{ env.artifact_name}}
+          name: allure-report-${{ env.artifact_name }}
           path: allure-report
 
+      # 📦 Lưu lại history để dùng ở lần kế tiếp
+      - name: Upload Allure History for trend
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-history-${{ env.artifact_name }}
+          path: allure-report/history
+
+
+# Just get a final-report
+# jobs:
+#   run-tests:
+#     strategy:
+#       matrix:
+#         spec_file:
+#           - cypress/e2e/features/LoginPage.feature
+#           - cypress/e2e/features/AdminPage.feature
+#           - cypress/e2e/features/SettingsPage.feature
+#     runs-on: ubuntu-latest
+#     steps:
+#       # checkout + cài Cypress + cài allure như cũ
+#       - name: Run Cypress tests
+#         run: |
+#           npx cypress run --spec "${{ matrix.spec_file }}"
+#       - name: Save Allure results
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: allure-results-${{ matrix.spec_file }}
+#           path: allure-results
+
+#   merge-report:
+#     needs: run-tests
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Download Allure results
+#         uses: actions/download-artifact@v4
+#         with:
+#           path: merged-allure-results
+
+#       - name: Merge Allure results
+#         run: |
+#           mkdir final-results
+#           find merged-allure-results -type f -name '*.json' -exec cp {} final-results/ \;
+
+#       - name: Generate Allure Report
+#         run: |
+#           npx allure generate final-results --clean -o final-report
+
+#       - name: Upload Merged Report
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: final-allure-report
+#           path: final-report
