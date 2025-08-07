@@ -4,7 +4,7 @@ Feature: All Features In PIM Page
 Background: 
     Given I open the PIM page
 
-@NCB_512
+@NCB_512, @severity=critical
 Scenario: Add Employee
     When I add employee in PIM page
     | firstname | middlename | lastname | employeeID |

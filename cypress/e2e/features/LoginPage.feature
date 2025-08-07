@@ -4,7 +4,7 @@ Feature: All Features In The Login Page
   Background:
     Given I open the login page
 
-  @NCB_124
+  @NCB_124, @severity=critical
   Scenario: Successful login
     When I login with valid credentials
     Then I should see the dashboard
