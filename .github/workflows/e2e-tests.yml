@@ -76,8 +76,15 @@ jobs:
           cp -r allure-report/history allure-results/ || true
           allure generate allure-results --clean -o allure-report
 
+      - name: Extract artifact name
+        run: |
+          ARTIFACT_NAME=$(basename "${{ matrix.spec_file }}" .feature)
+          ARTIFACT_NAME_SAFE=$(echo "$ARTIFACT_NAME" | tr '/' '-' | tr ' ' '-')  # phòng trường hợp có /
+          echo "artifact_name=$ARTIFACT_NAME_SAFE" >> $GITHUB_ENV
+
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-${{ matrix.spec_file }}
+          name: allure-report-${{ env.artifact_name}}
           path: allure-report
+
