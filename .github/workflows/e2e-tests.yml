@@ -29,7 +29,8 @@ jobs:
       - run: npm ci
 
       - name: Generate matrix.json
-        run: node generate-feature-matrix.js
+        run: node .github/workflows/generate-feature-matrix.js
+
 
       - id: set-matrix
         run: echo "matrix=$(cat matrix.json | jq -c .)" >> $GITHUB_OUTPUT
