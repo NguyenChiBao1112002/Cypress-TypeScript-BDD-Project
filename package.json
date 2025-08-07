@@ -1,0 +1,33 @@
+{
+  "name": "cy-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  "cypress:report": "npx cypress run && mkdir -p allure-results/history && cp -r allure-report/history allure-results/ || true && npx allure generate allure-results --clean -o allure-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^22.2.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.5",
+    "@cypress/webpack-preprocessor": "^6.0.4",
+    "@types/pdf-parse": "^1.1.5",
+    "allure-cypress": "^3.3.3",
+    "cypress": "^14.5.3",
+    "cypress-mochawesome-reporter": "^4.0.0",
+    "esbuild": "^0.25.8",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0",
+    "multiple-cucumber-html-reporter": "^3.9.3",
+    "pdf-parse": "^1.1.1",
+    "typescript": "^5.8.3"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": false,
+    "step_definitions": "cypress/e2e/Tests"
+  }
+}
