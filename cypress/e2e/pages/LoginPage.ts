@@ -3,7 +3,7 @@ class LoginPage{
         const baseUrl = Cypress.config("baseUrl");
         const loginPath = Cypress.env("loginPath"); 
         cy.visit(`${baseUrl}${loginPath}`);
-        cy.wait(3000);
+        cy.wait(5000);
     }
 
     fillUsername(username: string){

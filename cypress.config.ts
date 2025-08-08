@@ -24,7 +24,7 @@ export default defineConfig({
         })
       );
 
-      // Custom task để đọc file PDF
+      // Custom task to read PDF file
       on("task", {
         readPDF({ type }: { type: "actual" | "expected" }) {
           const downloadsFolder = config.downloadsFolder;
