@@ -1,3 +1,4 @@
+# Get many report based on Runned Feature Pages (The number of reports = The number of Runned Feature Pages)
 name: Run Cypress E2E Tests
 
 on:
@@ -13,9 +14,6 @@ on:
         description: "Base URL"
         required: true
         default: "https://opensource-demo.orangehrmlive.com"
-      tag:
-        description: "Tag to run (e.g. @tag1), leave blank or 'None' to run all"
-        required: false
 
 jobs:
   prepare:
@@ -74,10 +72,10 @@ jobs:
           CYPRESS_username: ${{ github.event.inputs.username }}
           CYPRESS_password: ${{ github.event.inputs.password }}
           CYPRESS_baseUrl: ${{ github.event.inputs.baseUrl }}
-          CYPRESS_grepTags: ${{ github.event.inputs.tag }}
         run: |
           npx cypress run \
-            --spec "${{ matrix.spec_file }}"
+            --spec "${{ matrix.spec_file }}" \
+            --env username=${{ github.event.inputs.username }},password=${{ github.event.inputs.password }}
 
       - name: Generate Allure Report
         run: |
@@ -88,3 +86,49 @@ jobs:
         with:
           name: allure-report-${{ env.artifact_name }}
           path: allure-report
+
+# Just collect a final report
+# jobs:
+#   run-tests:
+#     strategy:
+#       matrix:
+#         spec_file:
+#           - cypress/e2e/features/LoginPage.feature
+#           - cypress/e2e/features/AdminPage.feature
+#           - cypress/e2e/features/SettingsPage.feature
+#     runs-on: ubuntu-latest
+#     steps:
+#       # checkout + cài Cypress + cài allure như cũ
+#       - name: Run Cypress tests
+#         run: |
+#           npx cypress run --spec "${{ matrix.spec_file }}"
+#       - name: Save Allure results
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: allure-results-${{ matrix.spec_file }}
+#           path: allure-results
+
+#   merge-report:
+#     needs: run-tests
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Download Allure results
+#         uses: actions/download-artifact@v4
+#         with:
+#           path: merged-allure-results
+
+#       - name: Merge Allure results
+#         run: |
+#           mkdir final-results
+#           find merged-allure-results -type f -name '*.json' -exec cp {} final-results/ \;
+
+#       - name: Generate Allure Report
+#         run: |
+#           npx allure generate final-results --clean -o final-report
+
+#       - name: Upload Merged Report
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: final-allure-report
+#           path: final-report
+
