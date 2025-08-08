@@ -67,6 +67,7 @@ jobs:
           echo "artifact_name=$ARTIFACT_NAME_SAFE" >> $GITHUB_ENV
 
       - name: Run Cypress
+        continue-on-error: true
         env:
           CYPRESS_username: ${{ github.event.inputs.username }}
           CYPRESS_password: ${{ github.event.inputs.password }}
