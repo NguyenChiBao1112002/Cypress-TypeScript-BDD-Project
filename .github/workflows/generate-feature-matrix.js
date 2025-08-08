@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const INPUT_TAG = process.env.INPUT_TAG; // từ GitHub Actions truyền vào
+
 function getAllFeatureFiles(dir, fileList = []) {
   const files = fs.readdirSync(dir);
   files.forEach((file) => {
@@ -15,5 +17,17 @@ function getAllFeatureFiles(dir, fileList = []) {
   return fileList;
 }
 
-const featureFiles = getAllFeatureFiles("cypress/e2e");
-fs.writeFileSync("matrix.json", JSON.stringify({ spec_file: featureFiles }, null, 2));
+function fileContainsTag(filePath, tag) {
+  const content = fs.readFileSync(filePath, "utf-8");
+  return content.includes(tag);
+}
+
+const allFeatureFiles = getAllFeatureFiles("cypress/e2e");
+
+const filteredFiles = INPUT_TAG
+  ? allFeatureFiles.filter((file) => fileContainsTag(file, INPUT_TAG))
+  : allFeatureFiles;
+
+const matrix = filteredFiles.map((file) => ({ spec_file: file }));
+
+fs.writeFileSync("matrix.json", JSON.stringify({ include: matrix }, null, 2));
