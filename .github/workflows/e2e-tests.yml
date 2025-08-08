@@ -71,15 +71,18 @@ jobs:
           echo "artifact_name=$ARTIFACT_NAME_SAFE" >> $GITHUB_ENV
 
       - name: Run Cypress
-        continue-on-error: true
+        id: run_tests
         env:
           CYPRESS_username: ${{ github.event.inputs.username }}
           CYPRESS_password: ${{ github.event.inputs.password }}
           CYPRESS_baseUrl: ${{ github.event.inputs.baseUrl }}
         run: |
+          set +e
           npx cypress run \
             --spec "${{ matrix.spec_file }}" \
             --env username=${{ github.event.inputs.username }},password=${{ github.event.inputs.password }}
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+          set -e
 
       - name: Generate Allure Report
         run: |
@@ -90,6 +93,10 @@ jobs:
         with:
           name: allure-report-${{ env.artifact_name }}
           path: allure-report
+
+      - name: Mark job failed if tests failed
+        if: steps.run_tests.outputs.exit_code != '0'
+        run: exit 1
 
 # Just collect a final report
 # jobs:
