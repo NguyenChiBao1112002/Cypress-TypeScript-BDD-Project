@@ -1,4 +1,4 @@
-@NCB_123
+@NCB_123, @severity=critical
 Feature: All Features In The Login Page
 
   Background:
