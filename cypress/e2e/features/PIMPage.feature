@@ -12,3 +12,13 @@ Scenario: Add Employee
     | Vy        | Yen        | Nguyen   | 1425       |
     | Hung      |            | Tran     | 5879       |
     Then The system will switch to Personal Details Page
+
+@NCB_513
+Scenario: Search Employee
+    When I enter Emloyee Information to search Employee
+    | empl_name       | empl_id | supervisor_name | job_title             | sub_unit          |
+    | Sara Tencrady   | 0103    |  Hello Div      | Payroll Administrator | Human Resources   |
+    | Rebecca Harmony | 0042    |                 | QA Engineer           | Quality Assurance |
+    | Russel Hamilton | 0034    |                 | Software Engineer     | Development       |
+    And I click on Search button
+    Then I should see employees matching the entered criteria
