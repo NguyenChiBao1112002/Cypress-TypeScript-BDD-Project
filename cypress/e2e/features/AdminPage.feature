@@ -18,3 +18,10 @@ Scenario: Verify downloaded PDF contains expected content
     | neural net      |
     | ANN             |
     | NN              |
+
+@NCB_360
+Scenario: Search Users with valid information in User Managements tab
+    When I enter Username as "FMLName1"
+    And I enter Employee Name as "FName LName"
+    And I click on Search button
+    Then I should see Users matching the entered criteria
