@@ -38,7 +38,7 @@ When("updates other ID to {string}", (otherId: string) => {
 });
 
 When("sets the driver's license number to {string}", (license: string) => {
-  cy.get("label:contains(\"Driver's License Number\")")
+  cy.get("label:contains(\"Driver License Number\")")
     .parent()
     .next()
     .find("input")
