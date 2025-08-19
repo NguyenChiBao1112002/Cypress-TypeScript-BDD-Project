@@ -72,6 +72,5 @@ When("clicks the Save button", () => {
 });
 
 Then("the form should be submitted successfully", () => {
-  // Adjust this to check for your system's actual success message
   cy.get(".oxd-toast").should("contain.text", "Success");
 });

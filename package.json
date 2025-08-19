@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cypress:report": "npx cypress run ; allure generate allure-results --clean -o allure-report"
+    "cypress:report": "npx cypress run ; allure generate allure-results --clean -o allure-report",
+    "cypress:tag:report": "cypress run --env TAGS=$npm_config_tag ; allure generate allure-results --clean -o allure-report"
   },
   "keywords": [],
   "author": "",
