@@ -10,7 +10,6 @@ Given("I open the My Info page", () => {
   cy.wait(2000);
 });
 
-
 When("the user updates their name to {string}", (fullName: string) => {
   const [first, middle, last] = fullName.split(" ");
   cy.get("input[name='firstName']", { timeout: 10000 }).should('be.visible');
@@ -38,7 +37,7 @@ When("updates other ID to {string}", (otherId: string) => {
 });
 
 When("sets the driver's license number to {string}", (license: string) => {
-  cy.get("label:contains(\"Driver License Number\")")
+  cy.get("label:contains(\"Driver's License Number\")")
     .parent()
     .next()
     .find("input")

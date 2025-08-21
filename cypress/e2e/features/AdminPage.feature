@@ -25,3 +25,11 @@ Scenario: Search Users with valid information in User Managements tab
     And I enter Employee Name as "FName LName"
     And I click on Search button
     Then I should see Users matching the entered criteria
+
+@NCB_361
+Scenario: Update Background Color in Corporate Branding tab
+    When I switches to Corporate Branding tab
+    And I select Primary Gradient Color 1 into Red
+    And I select Primary Gradient Color 2 into Blue
+    And I click on Publish button
+    Then I should see Background Color update properly as selected
