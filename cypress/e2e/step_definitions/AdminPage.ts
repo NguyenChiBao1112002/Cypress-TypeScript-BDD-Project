@@ -57,7 +57,6 @@ When('I enter Employee Name as {string}', (employeeName: string) => {
     .find('input[placeholder="Type for hints..."]')
     .clear()
     .type(employeeName);
-  // Chọn suggestion đầu tiên
   cy.get('.oxd-autocomplete-dropdown')
     .find('.oxd-autocomplete-option')
     .first()
@@ -80,3 +79,40 @@ When('I select Status as {string}', (status: string) => {
 Then('I should see Users matching the entered criteria', () => {
   cy.get('.oxd-table-body').find('.oxd-table-row').should('have.length.at.least', 1);
 });
+
+When('I switches to Corporate Branding tab', () => {
+  if(cy.contains('More')){
+    cy.contains('More').click();
+    cy.contains('Corporate Branding').click();
+  }else{
+    cy.contains('Corporate Branding').click();
+  }
+  
+  cy.wait(3000);
+});
+
+When('I select Primary Gradient Color 1 into Red', () => {
+  cy.xpath("//label[contains(text(), 'Primary Gradient Color 1')]/following::div[contains(@class, 'oxd-color-input-preview')][1]").click();
+  cy.get('.oxd-color-picker .oxd-input.oxd-input--active').clear().type('#FF0000');
+  cy.wait(2500);
+});
+
+When('I select Primary Gradient Color 2 into Blue', () => {
+  cy.xpath("//label[contains(text(), 'Primary Gradient Color 2')]/following::div[contains(@class, 'oxd-color-input-preview')][1]").click();
+  cy.get('.oxd-color-picker .oxd-input.oxd-input--active').clear().type('#0000FF');
+  cy.wait(2500);
+});
+
+When('I click on Publish button', () => {
+  cy.get('button[type="submit"]').contains('Publish').click();
+  cy.wait(1500);
+});
+
+Then('I should see Background Color update properly as selected', () => {
+  cy.get('.oxd-topbar-header')
+  .should('have.css', 'background-image')
+  .and('include', 'linear-gradient')
+  .and('include', 'rgb(255, 0, 0)')
+  .and('include', 'rgb(0, 0, 255)');
+});
+
