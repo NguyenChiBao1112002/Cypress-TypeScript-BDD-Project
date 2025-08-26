@@ -1,0 +1,19 @@
+| Loại Selector              | Cú pháp CSS           | Ví dụ Cypress                                              |
+| -------------------------- | --------------------- | ---------------------------------------------------------- |
+| Theo thẻ                   | `button`              | `cy.get('button').click();`                                |
+| Theo ID                    | `#username`           | `cy.get('#username').type('admin');`                       |
+| Theo class                 | `.btn-primary`        | `cy.get('.btn-primary').should('be.visible');`             |
+| Nhiều class                | `.btn.btn-large`      | `cy.get('.btn.btn-large').click();`                        |
+| Theo attribute             | `input[name="email"]` | `cy.get('input[name="email"]').type('test@mail.com');`     |
+| Attribute bắt đầu bằng     | `a[href^="https"]`    | `cy.get('a[href^="https"]').should('have.attr','target');` |
+| Attribute kết thúc bằng    | `img[src$=".png"]`    | `cy.get('img[src$=".png"]').should('be.visible');`         |
+| Attribute chứa             | `a[href*="login"]`    | `cy.get('a[href*="login"]').click();`                      |
+| Con trực tiếp              | `div > p`             | `cy.get('div > p').should('contain','text');`              |
+| Con bất kỳ cấp             | `div p`               | `cy.get('div p').should('have.length', 3);`                |
+| Anh chị em kế tiếp         | `h1 + p`              | `cy.get('h1 + p').should('be.visible');`                   |
+| Anh chị em bất kỳ sau đó   | `h1 ~ p`              | `cy.get('h1 ~ p').should('exist');`                        |
+| Phần tử đầu tiên           | `li:first-child`      | `cy.get('li:first-child').should('contain','Home');`       |
+| Phần tử cuối cùng          | `li:last-child`       | `cy.get('li:last-child').click();`                         |
+| Phần tử theo vị trí        | `li:nth-child(3)`     | `cy.get('li:nth-child(3)').should('have.text','About');`   |
+| Phần tử theo trạng thái    | `input:checked`       | `cy.get('input:checked').should('exist');`                 |
+| Theo text (Cypress hỗ trợ) | Không phải CSS thuần  | `cy.contains('Login').click();`                            |
